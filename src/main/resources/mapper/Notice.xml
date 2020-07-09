@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tistory.ospace.simplesecurity2.repository.NoticeRepository">
+    <sql id="selectQuery">
+        SELECT
+            `id`,
+            `content`
+        FROM `notice_message`
+    </sql>
+    
+	<select id="countBy" resultType="java.lang.Integer">
+	   SELECT COUNT(*)
+	   FROM `notice_message`
+	</select>
+	
+	<select id="findAllBy" resultType="Notice">
+        <include refid="selectQuery" />
+        <!-- 
+        <where>
+            <if test="null != entity and null != entity.username">
+                AND `username` = #{username}
+            </if>
+        </where>
+         -->
+        <if test="null != search and search.offset != null">
+            LIMIT #{search.limit} OFFSET #{search.offset}
+        </if>
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO `notice_message` (
+            `content`
+        ) VALUES (
+            #{content}
+        )
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+</mapper>  

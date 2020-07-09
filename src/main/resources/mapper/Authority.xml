@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tistory.ospace.simplesecurity2.repository.AuthorityRepository">
+    <sql id="selectQuery">
+        SELECT
+            `username`,
+            `authority`
+        FROM `authorities`
+    </sql>
+    
+	<select id="countBy" resultType="java.lang.Integer">
+	   SELECT COUNT(*)
+	   FROM `authorities`
+	</select>
+	
+	<select id="findAllBy" resultType="Authority">
+        <include refid="selectQuery" />
+        <where>
+            <if test="null != entity and null != entity.username">
+                AND `username` = #{username}
+            </if>
+        </where>
+        <if test="null != search and search.offset != null">
+            LIMIT #{search.limit} OFFSET #{search.offset}
+        </if>
+    </select>
+    
+	<select id="findAllIn" resultType="Authority">
+        <include refid="selectQuery" />
+        WHERE `username` IN
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+    
+	<insert id="insert">
+		INSERT INTO `authorities` (
+			`username`,
+			`authority`
+		) VALUES (
+			#{userId},
+            #{authority}
+		)
+		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+	</insert>
+    
+    <delete id="deletetById">
+        DELETE FROM `authorities` WHERE `username` = #{username}
+    </delete>
+</mapper>  
