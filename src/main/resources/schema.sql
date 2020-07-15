@@ -1,3 +1,5 @@
+-- https://www.erdcloud.com/d/HdY7jQ7XFxs4MQBwv
+
 --DROP TABLE IF EXISTS user;
 
 CREATE TABLE IF NOT EXISTS users
@@ -53,6 +55,7 @@ CREATE TABLE IF NOT EXISTS persistent_logins
     last_used TIMESTAMP NOT NULL
 );
 
+-- ACL에 사용할 모든 사용자 혹은 권한을 sid기준으로 목록화
 CREATE TABLE IF NOT EXISTS acl_sid
 -- CREATE TABLE acl_sid
 (
@@ -62,6 +65,8 @@ CREATE TABLE IF NOT EXISTS acl_sid
     UNIQUE KEY unique_acl_sid (sid, principal)
 ) ENGINE=InnoDB;
 
+-- ACL에서 처리할 대상 클래스 정보
+-- 클래스 정보가 등록되어 있어야 해당 클래스에 대해 ACL 적용됨
 CREATE TABLE IF NOT EXISTS acl_class
 -- CREATE TABLE acl_class
 (
@@ -70,6 +75,10 @@ CREATE TABLE IF NOT EXISTS acl_class
     UNIQUE KEY uk_acl_class (class)
 ) ENGINE=InnoDB;
 
+-- acl_class을 참조하는 object_id_class
+-- 실제 클래스가 수행된 테이블에 대한 참조키인 object_id_identity
+-- 각 오브젝트 책임자인 owner_sid 컬럼
+-- 오브젝트 중첩구조를 표현하는 parent_object와 entities_inheriting으로 구성됨
 CREATE TABLE IF NOT EXISTS acl_object_identity
 -- CREATE TABLE acl_object_identity
 (
@@ -85,6 +94,12 @@ CREATE TABLE IF NOT EXISTS acl_object_identity
     CONSTRAINT fk_acl_object_identity_owner FOREIGN KEY (owner_sid) REFERENCES acl_sid (id)
 ) ENGINE=InnoDB;
 
+-- 사용자와 보안관련 테이블을 참조해서 사용자가 각 오브젝트에 대한 create, update, delete, read을 엑세스 제어
+-- acl_object_identity는 acl_object_identity 테이블 참조키, sid는 수행할 유저의 side를 참조키로 연결.
+-- mask는 별도로 관리된 비트 숫자로 등록(bit 0: read, bit 1: write, bit 2: create, bit 3: delete)
+-- granting이 true이면 mask로 지정된 허가를 수행, false이면 취소하고 블록킹
+-- ace_order는 접근권한 엔트리의 우선순위 결정
+-- https://docs.spring.io/spring-security/site/docs/3.0.x/reference/domain-acls.html
 CREATE TABLE IF NOT EXISTS acl_entry
 -- CREATE TABLE acl_entry
 (
@@ -101,10 +116,9 @@ CREATE TABLE IF NOT EXISTS acl_entry
     CONSTRAINT fk_acl_entry_acl FOREIGN KEY (sid) REFERENCES acl_sid (id)
 ) ENGINE=InnoDB;
 
-
-CREATE TABLE IF NOT EXISTS notice_message
+--CREATE TABLE IF NOT EXISTS notice_message
 -- CREATE TABLE notice_message
-(
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    content VARCHAR(100) NOT NULL
-) ENGINE=InnoDB;
+--(
+--    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--    content VARCHAR(100) NOT NULL
+--) ENGINE=InnoDB;
