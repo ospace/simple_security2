@@ -25,21 +25,10 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        
         <dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-acl</artifactId>
@@ -101,10 +90,12 @@
 	      <version>${json-lib.version}</version>
 	    </dependency>
 	     -->
+	     <!-- 
 	    <dependency>
 	      <groupId>com.fasterxml.jackson.core</groupId>
 	      <artifactId>jackson-databind</artifactId>
 	    </dependency>
+	     -->
         <!--// Json -->
 	</dependencies>
 

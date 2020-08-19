@@ -1,57 +1,4 @@
---DROP TABLE IF EXISTS user;
-
-CREATE TABLE IF NOT EXISTS users
--- CREATE TABLE users
-(
-  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR2(50) NOT NULL UNIQUE,
-  password VARCHAR2(128) NOT NULL,
-  enabled  BOOLEAN      NOT NULL DEFAULT FALSE
-);
-
-CREATE TABLE IF NOT EXISTS authorities
--- CREATE TABLE authorities
-(
-  username  VARCHAR2(255) NOT NULL,
-  authority VARCHAR2(255) NOT NULL,
---  UNIQUE KEY ix_auth_username (username, authority),
-  CONSTRAINT fk_authorities_users FOREIGN KEY(username) REFERENCES users(username)
-);
-
--- CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
-
-CREATE TABLE IF NOT EXISTS groups
--- CREATE TABLE groups
-(
-  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  group_name VARCHAR2(64) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS group_authorities
--- CREATE TABLE group_authorities
-(
-    group_id BIGINT UNSIGNED NOT NULL,
-    authority VARCHAR2(64) NOT NULL,
-    CONSTRAINT fk_group_authorities_group FOREIGN KEY(group_id) REFERENCES groups(id)
-);
-
-CREATE TABLE IF NOT EXISTS group_members
--- CREATE TABLE group_members
-(
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(64) NOT NULL,
-    group_id BIGINT NOT NULL,
-    CONSTRAINT fk_group_members_group FOREIGN KEY(group_id) REFERENCES groups(id)
-);
-
-CREATE TABLE IF NOT EXISTS persistent_logins
--- CREATE TABLE persistent_logins
-(
-    username VARCHAR(64) NOT NULL,
-    series VARCHAR(64) PRIMARY KEY,
-    token VARCHAR(64) NOT NULL,
-    last_used TIMESTAMP NOT NULL
-);
+--https://www.baeldung.com/spring-security-acl
 
 CREATE TABLE IF NOT EXISTS acl_sid
 -- CREATE TABLE acl_sid
@@ -72,6 +19,9 @@ CREATE TABLE IF NOT EXISTS acl_class
 
 CREATE TABLE IF NOT EXISTS acl_object_identity
 -- CREATE TABLE acl_object_identity
+-- owner_sid: Access Control Entries에 변경할 수 있는 객체 주체
+--    Alice가 owner_id인 BANK_ACCOUNT에 대해 Bob이 ACE에 추가할 때에
+--    권한전략에 의해 owner_id에 기반해서 변경하려는게 Alice인지 여부 확인 
 (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     object_id_class BIGINT UNSIGNED NOT NULL,
@@ -87,6 +37,7 @@ CREATE TABLE IF NOT EXISTS acl_object_identity
 
 CREATE TABLE IF NOT EXISTS acl_entry
 -- CREATE TABLE acl_entry
+
 (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     acl_object_identity BIGINT UNSIGNED NOT NULL,
@@ -102,9 +53,10 @@ CREATE TABLE IF NOT EXISTS acl_entry
 ) ENGINE=InnoDB;
 
 
-CREATE TABLE IF NOT EXISTS notice_message
--- CREATE TABLE notice_message
+CREATE TABLE IF NOT EXISTS post
+-- CREATE TABLE post
 (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    content VARCHAR(100) NOT NULL
+    title VARCHAR(100) NOT NULL,
+    content VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB;
