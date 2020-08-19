@@ -2,6 +2,7 @@ package com.tistory.ospace.simplesecurity2.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
@@ -18,11 +19,10 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class AclSecurityConfig extends GlobalMethodSecurityConfiguration {
 	@Autowired
-	private MethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler;
+	private DefaultMethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler;
 	
 	@Override
 	protected MethodSecurityExpressionHandler createExpressionHandler() {
 		return defaultMethodSecurityExpressionHandler;
 	}
-	
 }

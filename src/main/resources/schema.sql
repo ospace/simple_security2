@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -- https://www.erdcloud.com/d/HdY7jQ7XFxs4MQBwv
 
 --DROP TABLE IF EXISTS user;
@@ -54,6 +55,9 @@ CREATE TABLE IF NOT EXISTS persistent_logins
     token VARCHAR(64) NOT NULL,
     last_used TIMESTAMP NOT NULL
 );
+=======
+--https://www.baeldung.com/spring-security-acl
+>>>>>>> testonly
 
 -- ACL에 사용할 모든 사용자 혹은 권한을 sid기준으로 목록화
 CREATE TABLE IF NOT EXISTS acl_sid
@@ -81,6 +85,9 @@ CREATE TABLE IF NOT EXISTS acl_class
 -- 오브젝트 중첩구조를 표현하는 parent_object와 entities_inheriting으로 구성됨
 CREATE TABLE IF NOT EXISTS acl_object_identity
 -- CREATE TABLE acl_object_identity
+-- owner_sid: Access Control Entries에 변경할 수 있는 객체 주체
+--    Alice가 owner_id인 BANK_ACCOUNT에 대해 Bob이 ACE에 추가할 때에
+--    권한전략에 의해 owner_id에 기반해서 변경하려는게 Alice인지 여부 확인 
 (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     object_id_class BIGINT UNSIGNED NOT NULL,
@@ -102,6 +109,7 @@ CREATE TABLE IF NOT EXISTS acl_object_identity
 -- https://docs.spring.io/spring-security/site/docs/3.0.x/reference/domain-acls.html
 CREATE TABLE IF NOT EXISTS acl_entry
 -- CREATE TABLE acl_entry
+
 (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     acl_object_identity BIGINT UNSIGNED NOT NULL,
@@ -116,9 +124,20 @@ CREATE TABLE IF NOT EXISTS acl_entry
     CONSTRAINT fk_acl_entry_acl FOREIGN KEY (sid) REFERENCES acl_sid (id)
 ) ENGINE=InnoDB;
 
+<<<<<<< HEAD
 --CREATE TABLE IF NOT EXISTS notice_message
 -- CREATE TABLE notice_message
 --(
 --    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 --    content VARCHAR(100) NOT NULL
 --) ENGINE=InnoDB;
+=======
+
+CREATE TABLE IF NOT EXISTS post
+-- CREATE TABLE post
+(
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    content VARCHAR(255) NOT NULL
+) ENGINE=InnoDB;
+>>>>>>> testonly
